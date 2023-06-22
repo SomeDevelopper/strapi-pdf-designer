@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useHistory } from 'react-router-dom';
 import { Link } from '@strapi/design-system/Link';
 import { Button } from '@strapi/design-system/Button';
-import { Tooltip } from '@strapi/design-system/Tooltip';
 import { Table, Thead, Tbody, TFooter, Tr, Th, Td } from '@strapi/design-system/Table';
 import { Box } from '@strapi/design-system/Box';
 import { Dialog, DialogBody, DialogFooter } from '@strapi/design-system/Dialog';
@@ -17,7 +16,6 @@ import { Typography } from '@strapi/design-system/Typography';
 import { Tabs, Tab, TabGroup, TabPanels, TabPanel } from '@strapi/design-system/Tabs';
 import { Layout, BaseHeaderLayout, ContentLayout } from '@strapi/design-system/Layout';
 import { isEmpty, isNil, pick, uniqBy } from 'lodash';
-import GitHubButton from 'react-github-btn';
 
 import styled from 'styled-components';
 import getMessage from '../../utils/getMessage';

@@ -2,8 +2,6 @@
 const _ = require("lodash");
 const { htmlToText } = require("html-to-text");
 const { isNil } = require("lodash");
-const html_to_pdf = require("html-pdf-node");
-const decode = require("decode-html");
 /**
  * email-designer.js controller
  *
