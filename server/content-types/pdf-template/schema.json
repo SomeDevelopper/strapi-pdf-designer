@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pdf_templates",
+  "info": {
+    "singularName": "pdf-template",
+    "pluralName": "pdf-templates",
+    "displayName": "pdf-template",
+    "name": "pdf-template"
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": false
+    },
+    "content-type-builder": {
+      "visible": false
+    }
+  },
+  "options": {
+    "draftAndPublish": false,
+    "timestamps": true,
+    "increments": true,
+    "comment": ""
+  },
+  "attributes": {
+    "templateReferenceId": {
+      "type": "integer",
+      "required": false,
+      "unique": true
+    },
+    "design": {
+      "type": "json"
+    },
+    "name": {
+      "type": "string"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "bodyHtml": {
+      "type": "text"
+    },
+    "bodyText": {
+      "type": "text"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true
+    },
+    "tags": {
+      "type": "json"
+    }
+  }
+}
