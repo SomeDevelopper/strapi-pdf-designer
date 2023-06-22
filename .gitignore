@@ -1,6 +1,6 @@
-node_module
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
 stats.json
 coverage
+node_modules
