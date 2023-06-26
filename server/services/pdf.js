@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const decode = require('decode-html');
 const { htmlToText } = require('html-to-text');
-const html_to_pdf = require("html-pdf-node");
+const html_to_pdf = require("html-pdf-node-generator");
 
 const templateSettings = {
   evaluate: /\{\{(.+?)\}\}/g,
@@ -41,7 +41,6 @@ module.exports = ({strapi}) => {
         let bodyHtml, bodyText
         ({bodyHtml, bodyText} = response)
 
-        console.log(bodyHtml)
 
         if (isMantainLegacyTemplateActive()) {
           bodyHtml = bodyHtml.replace(/<%/g, '{{').replace(/%>/g, '}}');
@@ -77,6 +76,7 @@ module.exports = ({strapi}) => {
       };
 
       return {
-        getPDF
+        getPDF,
+        
       }
 }

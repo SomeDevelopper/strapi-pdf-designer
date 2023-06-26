@@ -246,7 +246,6 @@ const EmailDesignerPage = ({ isCore = false }) => {
       console.log(error);
       return;
     }
-    console.log(html)
     try {
       if (templateId) {
           await request(`/${pluginId}/templates/${templateId}`, {
