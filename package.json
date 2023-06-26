@@ -1,6 +1,6 @@
 {
   "name": "pdf-designer",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "Strapi PDF Designer plugin",
   "strapi": {
     "name": "pdf-designer",
@@ -39,6 +39,9 @@
   "engines": {
     "node": ">=14.19.1 <=18.x.x",
     "npm": ">=6.0.0"
+  },
+  "repository": {
+    "type": "git"
   },
   "license": "MIT"
 }
