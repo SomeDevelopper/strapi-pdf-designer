@@ -20,7 +20,7 @@ module.exports = ({strapi}) => {
    * Promise to send a composed HTML email.
    * @return {Promise}
    */
-    const getPDF = async (pdfTemplate = {}, data = {}, myFooter = {}) => {
+    const generatePdfTemplate = async (pdfTemplate = {}, data = {}, myFooter = {}) => {
         const { templateReferenceId } = pdfTemplate || {}
         const { footerString } = myFooter || {}
         const attributes = ['text', 'html', 'subject'];
@@ -36,7 +36,7 @@ module.exports = ({strapi}) => {
 
         if (!response) {
           strapi.log.error(`No pdf template found with referenceId "${templateReferenceId}"`);
-          return null;
+          return;
         }
         let bodyHtml, bodyText
         ({bodyHtml, bodyText} = response)
@@ -65,7 +65,6 @@ module.exports = ({strapi}) => {
         );
 
         const options = {
-          path: 'testFormat.pdf',
           footerTemplate: footerString
         }
 
@@ -76,7 +75,6 @@ module.exports = ({strapi}) => {
       };
 
       return {
-        getPDF,
-        
+        generatePdfTemplate,
       }
 }

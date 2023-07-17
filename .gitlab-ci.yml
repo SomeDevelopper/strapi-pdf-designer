@@ -1,0 +1,14 @@
+image: node:18.16.0
+
+stages:
+    - build
+build:
+    stage: build
+    script:
+        - npm install
+        - CI=false
+        - npm publish
+        - echo "-- build completed successfully"
+    only:
+        - main
+
