@@ -1,6 +1,6 @@
 # Introduction
 
-This plugin is a fork of the Strapi Plugin Email Designer. It's use for designer a one page pdf using a drag and drop design.
+This plugin is a fork of the Strapi Plugin Email Designer. It is used to create a single-one-page PDF using drag-and-drop.
 
 ## Requirement :
 You need a node version between 16.x.x and 18.x.x and a Strapi version >= 4.10.0
