@@ -32,7 +32,7 @@ try {
    await strapi
     .plugin('pdfdesigner')
     .service('pdf')
-    .generatePdfTemplate(
+    .generatePdf(
       {
        templateReferenceId: 1
       },
@@ -43,7 +43,7 @@ If you want to put some data in your pdf, you can do it by adding in your design
 
 Then you can specify your data in the call plugin : 
 ```javascript
-const pdf = await strapi.plugin('pdf-designer').service('pdf').generatePdfTemplate(
+const pdf = await strapi.plugin('pdf-designer').service('pdf').generatePdf(
                 { templateReferenceId: 1 },
                 {
                   data: {
