@@ -20,7 +20,7 @@ module.exports = ({strapi}) => {
    * Promise to send a composed HTML email.
    * @return {Promise}
    */
-    const generatePdfTemplate = async (pdfTemplate = {}, data = {}, myFooter = {}) => {
+    const generatePdf = async (pdfTemplate = {}, data = {}, myFooter = {}) => {
         const { templateReferenceId } = pdfTemplate || {}
         const { footerString } = myFooter || {}
         const attributes = ['text', 'html', 'subject'];
@@ -75,6 +75,6 @@ module.exports = ({strapi}) => {
       };
 
       return {
-        generatePdfTemplate,
+        generatePdf,
       }
 }
