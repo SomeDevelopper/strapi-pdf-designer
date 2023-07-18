@@ -12,7 +12,7 @@ Install the strapi-pdf-designer with node :
 npm install strapi-pdf-designer@latest
 ```
 
-Make sur the plugin was enable in the plugin file.
+Make sure the plugin was enable in the plugin file.
 
 ```javascript
 return {
