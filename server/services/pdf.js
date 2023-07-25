@@ -25,18 +25,17 @@ module.exports = ({strapi}) => {
         const { footerString } = myFooter || {}
         const attributes = ['text', 'html', 'subject'];
         if(!templateReferenceId) {
-          console.log('Une erreur est arrivé !')
-          return
+          strapi.log.error(`No template reference specified`)
+          throw Error
         }
-
-
+        try {
         const response = await strapi.db
           .query('plugin::pdf-designer.pdf-template')
           .findOne({ where: { templateReferenceId } });
 
         if (!response) {
           strapi.log.error(`No pdf template found with referenceId "${templateReferenceId}"`);
-          return;
+          throw Error
         }
         let bodyHtml, bodyText
         ({bodyHtml, bodyText} = response)
@@ -72,6 +71,9 @@ module.exports = ({strapi}) => {
         const bufferPDF = await html_to_pdf.generatePdf(files, options)
 
         return bufferPDF
+      } catch (error) {
+          strapi.log.error(error)
+      }
       };
 
       return {

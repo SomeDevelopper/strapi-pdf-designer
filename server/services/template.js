@@ -13,8 +13,16 @@ module.exports = ({ strapi }) => {
      * Promise to fetch a template.
      * @return {Promise}
      */
-    findOne(params) {
-      return strapi.query('plugin::pdf-designer.pdf-template').findOne({ where: params });
+    async findOne(params) {
+      try {
+        const response = await strapi.query('plugin::pdf-designer.pdf-template').findOne({ where: params });
+        if (!response) {
+          strapi.log.error('An error has occurred')
+        }
+        return 
+      } catch (error) {
+        strapi.log.error(error)
+      }
     },
 
     /**

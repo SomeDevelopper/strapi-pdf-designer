@@ -15,11 +15,16 @@ module.exports = {
    * @return {Object}
    */
   getTemplates: async (ctx) => {
-    const templates = await strapi
-      .plugin("pdf-designer")
-      .service("template")
-      .findMany();
-    ctx.send(templates);
+    try {
+      const templates = await strapi
+        .plugin("pdf-designer")
+        .service("template")
+        .findMany();
+     ctx.send(templates);
+    } catch (error) {
+      console.log(error)
+    }
+    
   },
 
   /**
@@ -28,11 +33,19 @@ module.exports = {
    * @return {Object}
    */
   getTemplate: async (ctx) => {
-    const template = await strapi
-      .plugin("pdf-designer")
-      .service("template")
-      .findOne({ id: ctx.params.templateId });
-    ctx.send(template);
+    if(!ctx.params.templateId){
+      console.log('No template ID specified')
+      throw Error
+    }
+    try {
+      const template = await strapi
+        .plugin("pdf-designer")
+        .service("template")
+        .findOne({ id: ctx.params.templateId });
+      ctx.send(template);
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   /**
@@ -41,11 +54,20 @@ module.exports = {
    * @return {Object}
    */
   deleteTemplate: async (ctx) => {
-    await strapi
-      .plugin("pdf-designer")
-      .service("template")
-      .delete({ id: ctx.params.templateId });
-    ctx.send({ removed: true });
+    if (!ctx.params.templateId) {
+      console.log('No template ID specified')
+      throw Error
+    }
+    try {
+      await strapi
+        .plugin("pdf-designer")
+        .service("template")
+        .delete({ id: ctx.params.templateId });
+      ctx.send({ removed: true });
+    } catch (error) {
+      console.log(error)
+    }
+    
   },
 
   /**
@@ -54,7 +76,11 @@ module.exports = {
    * @return {Object}
    */
   saveTemplate: async (ctx) => {
-    let { templateId } = ctx.params;
+    const { templateId } = ctx.params;
+    if(!templateId) {
+      console.log('No template ID specified')
+      throw Error
+    }
 
     const { templateReferenceId, import: importTemplate } = ctx.request.body;
 
@@ -82,7 +108,6 @@ module.exports = {
     }
 
     try {
-
       const template =
         templateId === "new"
           ? await strapi
@@ -97,6 +122,7 @@ module.exports = {
       ctx.send(template || {});
     } catch (error) {
       ctx.badRequest(null, error);
+      console.log(error)
     }
   },
 
@@ -107,6 +133,7 @@ module.exports = {
    */
   duplicateTemplate: async (ctx) => {
     if (_.isEmpty(ctx.params.sourceTemplateId)) {
+      console.log('No souce template ID given')
       return ctx.badRequest("No source template Id given");
     }
 
@@ -141,9 +168,10 @@ module.exports = {
     const { coreEmailType } = ctx.params;
     if (
       !["user-address-confirmation", "reset-password"].includes(coreEmailType)
-    )
+    ) {
+      console.log('No valid core message key')
       return ctx.badRequest("No valid core message key");
-
+    }
     const pluginStoreEmailKey =
       coreEmailType === "user-address-confirmation"
         ? "email_confirmation"
@@ -197,9 +225,10 @@ module.exports = {
     const { coreEmailType } = ctx.params;
     if (
       !["user-address-confirmation", "reset-password"].includes(coreEmailType)
-    )
+    ) {
+      console.log('No valide core message key')
       return ctx.badRequest("No valid core message key");
-
+    }
     const pluginStoreEmailKey =
       coreEmailType === "user-address-confirmation"
         ? "email_confirmation"
@@ -212,6 +241,10 @@ module.exports = {
     });
 
     const emailsConfig = await pluginStore.get({ key: "email" });
+    if(!emailsConfig) {
+      console.log('An error has occured when getting email config')
+      return
+    }
     const config = strapi.plugin("pdf-designer").services.config.getConfig();
 
     emailsConfig[pluginStoreEmailKey] = {
@@ -231,9 +264,11 @@ module.exports = {
       },
       design: ctx.request.body.design,
     };
-
-    await pluginStore.set({ key: "email", value: emailsConfig });
-
-    ctx.send({ message: "Saved" });
+    try {
+      await pluginStore.set({ key: "email", value: emailsConfig });
+      ctx.send({ message: "Saved" });
+    }catch (error) {
+      console.log(error)
+    }
   },
 };
