@@ -17,11 +17,11 @@ module.exports = ({ strapi }) => {
       try {
         const response = await strapi.query('plugin::pdf-designer.pdf-template').findOne({ where: params });
         if (!response) {
-          strapi.log.error('An error has occurred')
+          console.log('An error has occurred')
         }
-        return 
+        return response
       } catch (error) {
-        strapi.log.error(error)
+        console.log(error)
       }
     },
 
@@ -29,8 +29,16 @@ module.exports = ({ strapi }) => {
      * Promise to fetch all templates.
      * @return {Promise}
      */
-    findMany(params) {
-      return strapi.query('plugin::pdf-designer.pdf-template').findMany({ where: params });
+    async findMany(params) {
+      try {
+        const response = await strapi.query('plugin::pdf-designer.pdf-template').findMany({ where: params });
+        if (!response){
+          throw Error
+        }
+        return response
+      } catch (error) {
+        console.log(error)
+      }
     },
 
     /**
@@ -38,12 +46,20 @@ module.exports = ({ strapi }) => {
      * @return {Promise}
      */
     async create(values) {
-      const test = await strapi.query('plugin::pdf-designer.pdf-template').create({ data: values });
-      return {
-        values: values,
-        templateCreate : test,
-        success: true
+      try {
+        const test = await strapi.query('plugin::pdf-designer.pdf-template').create({ data: values });
+        if (!test){
+          throw Error
+        }
+        return {
+          values: values,
+          templateCreate : test,
+          success: true
       }
+      } catch (error) {
+        console.log(error)
+      }
+      
     },
 
     /**
@@ -52,8 +68,15 @@ module.exports = ({ strapi }) => {
      */
     async update(params, values) {
       // FIXME: ⬇︎ avoid duplicating templateReferenceId field
-      
-      return strapi.query('plugin::pdf-designer.pdf-template').update({ where: params, data: values });
+      try {
+        const response = await strapi.query('plugin::pdf-designer.pdf-template').update({ where: params, data: values });
+        if(!response) {
+          throw Error
+        }
+        return response
+      } catch (error) {
+        console.log(error)
+      } 
     },
 
     /**
@@ -61,7 +84,15 @@ module.exports = ({ strapi }) => {
      * @return {Promise}
      */
     async delete(params) {
-      return strapi.query('plugin::pdf-designer.pdf-template').delete({ where: params });
+      try {
+        const response = await strapi.query('plugin::pdf-designer.pdf-template').delete({where: params})
+        if (!response) {
+          throw Error
+        }
+        return response
+      } catch (error) {
+        console.log(error)
+      }
     },
   };
 };
