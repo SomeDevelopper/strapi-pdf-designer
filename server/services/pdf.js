@@ -3,7 +3,7 @@
 const _ = require('lodash');
 const decode = require('decode-html');
 const { htmlToText } = require('html-to-text');
-const html_to_pdf = require("html-pdf-node-generator");
+const html_to_pdf = require('html-pdf-node');
 
 const templateSettings = {
   evaluate: /\{\{(.+?)\}\}/g,
