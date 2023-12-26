@@ -70,9 +70,17 @@ module.exports = ({strapi}) => {
         const files = {content: decode(templatedAttributes.html)}
         const bufferPDF = await html_to_pdf.generatePdf(files, options)
 
+        if (!Buffer.isBuffer(bufferPDF)) {
+          const e = 'A buffer could not be returned for template pdf'
+
+          strapi.log.error(e)
+          throw new Error (e)
+        }
+
         return bufferPDF
       } catch (error) {
-          strapi.log.error(error)
+        strapi.log.error(error)
+        throw error
       }
       };
 
