@@ -28,7 +28,7 @@
   "notification.templateIdCopied": "ID copied to clipboard",
   "notification.templateReferenceIdNotEmpty": "Reference ID cannot be empty",
   "pleaseConfirm": "Are you sure?",
-  "plugin.name": "PDF designer",
+  "plugin.name": "PDF designer 5",
   "prompt.unsaved": "Unsaved changes",
   "questions.sureToDelete": "Do you want delete this entry?",
   "questions.sureToDuplicate": "Do you want duplicate this entry?",
@@ -47,5 +47,36 @@
   "tooltip.delete": "Delete Template",
   "tooltip.duplicate": "Duplicate",
   "tooltip.edit": "Edit",
-  "user-address-confirmation": "User address confirmation"
+  "user-address-confirmation": "User address confirmation",
+
+  "error": "Error",
+  "error.message": "An error occurred while saving the email template",
+  "error.duplicate": "An error occurred while duplicating the email template",
+  "error.delete": "An error occurred while deleting the email template",
+  "error.noReferenceId.title": "Reference ID Required",
+  "error.noReferenceId.message": "Please provide a reference ID for the email template",
+  "error.importingTemplates": "An error occurred during the import process",
+  "error.loadingTemplates": "An error occurred while loading the email templates",
+
+  "success": "Success",
+  "save": "Save",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  
+  "success.single.message": "The email template was imported successfully",
+  "success.message": "Email template saved successfully",
+  "success.duplicate": "Email template duplicated successfully",
+  "success.delete": "Email template deleted successfully",
+
+  "page.title": "Email PDF Designer (v5)",
+  "page.design.title": "PDF Designer",
+  "page.subTitle": "Easily design pdf in your Strapi 5 admin panel",
+
+  "input.label.templateReferenceId": "Template Reference ID",
+  "input.placeholder.templateReferenceId": "E.g. 1",
+  "input.label.templateName": "Template Name",
+  "input.placeholder.templateName": "E.g. Welcome Email",
+  "input.label.subject": "Email Subject",
+  "input.placeholder.subject": "E.g. Welcome to Our Platform"
+
 }

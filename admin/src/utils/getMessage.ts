@@ -1,7 +1,7 @@
 import { useIntl } from 'react-intl';
 import { isString } from 'lodash';
 
-import pluginId from '../pluginId';
+import { pluginId } from '../pluginId';
 
 const getMessage = (input, defaultMessage = '', inPluginScope = true) => {
   const { formatMessage } = useIntl();
@@ -20,4 +20,4 @@ const getMessage = (input, defaultMessage = '', inPluginScope = true) => {
   );
 };
 
-export default getMessage;
+export { getMessage };

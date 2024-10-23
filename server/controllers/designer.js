@@ -1,14 +1,13 @@
-"use strict";
-const _ = require("lodash");
-const { htmlToText } = require("html-to-text");
-const { isNil } = require("lodash");
+import _ from "lodash";
+import { htmlToText } from "html-to-text";
+import { isNil } from "lodash";
 /**
  * email-designer.js controller
  *
  * @description: A set of functions called "actions" of the `email-designer` plugin.
  */
 
-module.exports = {
+export default {
   /**
    * Get template design action.
    *

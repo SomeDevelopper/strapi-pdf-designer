@@ -1,5 +1,11 @@
-module.exports = {
-  standardEmailRegistrationTemplate: {
+import { pluginId } from './pluginId';
+
+/**
+ * Get the URL to a specific page in the plugin
+ */
+export const getUrl = (to?: string) => (to ? `/plugins/${pluginId}/${to}` : `/plugins/${pluginId}`);
+
+export const standardEmailRegistrationTemplate = {
     counters: { u_row: 2, u_content_text: 1, u_content_image: 1, u_column: 2 },
     body: {
       values: {
@@ -77,5 +83,4 @@ module.exports = {
       ],
     },
     schemaVersion: 6,
-  },
 };

@@ -16,6 +16,9 @@
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
+    "@strapi/design-system": "^2.0.0-rc.11",
+    "@strapi/helper-plugin": "^4.25.12",
+    "@strapi/icons": "^2.0.0-rc.11",
     "cypress": "^12.17.1",
     "dayjs": "^1.11.9",
     "decode-html": "^2.0.0",
@@ -24,15 +27,23 @@
     "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-email-editor": "^1.7.8",
     "react-syntax-highlighter": "^15.5.0",
-    "striptags": "^3.2.0"
+    "striptags": "^3.2.0",
+    "styled-components": "^6.0.0"
+  },
+  "resolutions": {
+    "styled-components": "^6.0.0"
   },
   "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.1",
     "prettier": "^3.0.0"
   },
   "peerDependencies": {
-    "@strapi/strapi": "^4.10.0"
+    "@strapi/strapi": "^5.0.0"
   },
   "author": {
     "name": "A Engie developer"
@@ -43,7 +54,7 @@
     }
   ],
   "engines": {
-    "node": ">=16.x.x <=18.x.x",
+    "node": ">=16.x.x <=20.x.x",
     "npm": ">=9.8.0"
   },
   "repository": {
