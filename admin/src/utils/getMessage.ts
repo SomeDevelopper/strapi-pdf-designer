@@ -3,7 +3,7 @@ import { isString } from 'lodash';
 
 import { pluginId } from '../pluginId';
 
-const getMessage = (input, defaultMessage = '', inPluginScope = true) => {
+const getMessage = (input: any, defaultMessage = '', inPluginScope = true) => {
   const { formatMessage } = useIntl();
   let formattedId = '';
   if (isString(input)) {

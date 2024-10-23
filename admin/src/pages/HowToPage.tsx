@@ -4,7 +4,7 @@ import { Box, Typography, Flex } from '@strapi/design-system';
 import { Link as RouterLink } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { useNavigate } from 'react-router-dom';
-import sunburst from 'react-syntax-highlighter/dist/esm/styles/prism/material-dark';
+// import sunburst from 'react-syntax-highlighter/dist/esm/styles/prism/material-dark';
 import { getMessage } from '../utils/getMessage';
 
 const HowToPage = () => {
@@ -66,7 +66,7 @@ return (
           lineProps={{ style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' } }}
           wrapLines={true}
           language="javascript"
-          style={sunburst}
+          // style={sunburst}
         >
           {exampleCode}
         </SyntaxHighlighter>

@@ -1,14 +1,14 @@
 import React, { memo, useRef, useState, useEffect, useCallback } from 'react';
-import { auth, LoadingIndicatorPage } from '@strapi/helper-plugin';
+// import { auth, LoadingIndicatorPage } from '@strapi/helper-plugin';
 import { faCopy as CopyIcon, faInfoCircle, faFileExport, faFileImport } from '@fortawesome/free-solid-svg-icons';
 import { Eye, EyeStriked, Pencil, Duplicate, Trash, Plus, ArrowLeft, Stack } from '@strapi/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, IconButton, Field, Dialog, } from '@strapi/design-system';
+import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, TooltipProvider, DesignSystemProvider, IconButton, Field, Dialog, Link, Table, Thead, Tbody, TFooter, Tr, Td, Th  } from '@strapi/design-system';
 import { Layouts, Page, useNotification } from "@strapi/admin/strapi-admin";
 import { isEmpty, isNil, pick, uniqBy } from 'lodash';
 import { getUrl } from "../constants";
-import { useIntl } from "react-intl";
+import { useIntl } from "react-intl"; 
 import type { EmailTemplate } from "../types";
 import { useTr } from "../hooks/useTr";
 import styled from 'styled-components';
@@ -26,6 +26,7 @@ import {
     duplicateTemplate,
     updateCoreTemplate,
 } from "../services";
+import CustomEmailTable from '../components/CustomEmailTable';
 
 
 const FooterWrapper = styled.div`
@@ -231,12 +232,14 @@ const HomePage = () => {
   ];
 
   return (
-    <Layout>
-      {emailTemplates === undefined ? (
-        <LoadingIndicatorPage />
-      ) : (
-        <>
+    <Page.Main>
+      {/* {emailTemplates === undefined ? (
+        // <LoadingIndicatorPage /> 
+        null
+      ) : ( */}
+        <DesignSystemProvider>
           <Dialog.Root
+            
             // isConfirmButtonLoading={importLoading}
             open={importConfirmationModal && importedTemplates.length > 0}
             onOpenChange={() => {
@@ -244,113 +247,134 @@ const HomePage = () => {
                 if (emailTemplatesFileSelect.current) {
                     emailTemplatesFileSelect.current.value = '';
                 }
-              setImportedTemplates(undefined);
+              setImportedTemplates([]);
             }}
           >
-            <Dialog.Body icon={<ExclamationMarkCircle />}>
-              <Stack size={2}>
-                <Flex justifyContent="center">
-                  <Typography id="confirm-description">{getMessage('notification.importTemplate')}</Typography>
-                </Flex>
-              </Stack>
-            </Dialog.Body>
-            <Dialog.Footer>
-                <Dialog.Cancel>   
-                    <Button onClick={() => setImportConfirmationModal(false)} variant="tertiary">
-                        Cancel
-                    </Button>
-                </Dialog.Cancel>
-                <Button variant="danger-light" startIcon={<Trash />} onClick={() => handleTemplatesImport()}>
-                  Confirm
-                </Button>
-            </Dialog.Footer>
+            <Dialog.Content>
+              <Dialog.Body>
+                <Stack>
+                  <Flex justifyContent="center">
+                    <Typography id="confirm-description">{getMessage('notification.importTemplate')}</Typography>
+                  </Flex>
+                </Stack>
+              </Dialog.Body>
+              <Dialog.Footer>
+                  <Dialog.Cancel>   
+                      <Button onClick={() => setImportConfirmationModal(false)} variant="tertiary">
+                          Cancel
+                      </Button>
+                  </Dialog.Cancel>
+                  <Button variant="danger-light" startIcon={<Trash />} onClick={() => handleTemplatesImport()}>
+                    Confirm
+                  </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+            
           </Dialog.Root>
           <Dialog.Root
             isOpen={!isNil(duplicateConfirmationModal) && duplicateConfirmationModal !== false}
             title={getMessage('pleaseConfirm')}
             onClose={() => setDuplicateConfirmationModal(false)}
           >
-            <Dialog.Body icon={<ExclamationMarkCircle />}>
-              <Stack size={2}>
-                <Flex justifyContent="center">
-                  <Typography id="confirm-description">{getMessage('questions.sureToDuplicate')}</Typography>
-                </Flex>
-              </Stack>
-            </Dialog.Body>
-            <Dialog.Footer
-              startAction={
-                <Button onClick={() => setDuplicateConfirmationModal(false)} variant="tertiary">
-                  Cancel
-                </Button>
-              }
-              endAction={
-                <Button variant="danger-light" startIcon={<Duplicate />} onClick={() => handleTemplateDuplication()}>
-                  Confirm
-                </Button>
-              }
-            />
+            <Dialog.Content>
+              <Dialog.Body >
+                <Stack >
+                  <Flex justifyContent="center">
+                    <Typography id="confirm-description">{getMessage('questions.sureToDuplicate')}</Typography>
+                  </Flex>
+                </Stack>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.Cancel>
+                  <Button onClick={() => setDuplicateConfirmationModal(false)} variant="tertiary">
+                    Cancel
+                  </Button>
+                </Dialog.Cancel>
+
+                <Dialog.Action>
+                  <Button variant="danger-light" startIcon={<Duplicate />} onClick={() => handleTemplateDuplication()}>
+                    Confirm
+                  </Button>
+                </Dialog.Action>
+
+              </Dialog.Footer>
+            </Dialog.Content>
+            
           </Dialog.Root>
 
           <Dialog.Root
-            isOpen={!isNil(deleteConfirmationModal) && deleteConfirmationModal !== false}
-            title={getMessage('pleaseConfirm')}
+            open={!isNil(deleteConfirmationModal) && deleteConfirmationModal !== false}
+            // title={getMessage('pleaseConfirm')}
             toggleModal={() => setDeleteConfirmationModal(false)}
             onClose={() => setDeleteConfirmationModal(false)}
           >
-            <Dialog.Body icon={<ExclamationMarkCircle />}>
-              <Stack size={2}>
-                <Flex justifyContent="center">
-                  <Typography id="confirm-description">{getMessage('questions.sureToDelete')}</Typography>
-                </Flex>
-              </Stack>
-            </Dialog.Body>
-            <Dialog.Footer
-              startAction={
+            <Dialog.Content>
+              <Dialog.Body>
+                <Stack >
+                  <Flex justifyContent="center">
+                    <Typography id="confirm-description">{getMessage('questions.sureToDelete')}</Typography>
+                  </Flex>
+                </Stack>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Dialog.Cancel>
                 <Button onClick={() => setDeleteConfirmationModal(false)} variant="tertiary">
-                  Cancel
-                </Button>
-              }
-              endAction={
-                <Button variant="danger-light" startIcon={<Trash />} onClick={() => handleTemplateDeletion()}>
-                  Confirm
-                </Button>
-              }
-            />
-          </Dialog>
+                    Cancel
+                  </Button>
+                </Dialog.Cancel>
 
-          <BaseHeaderLayout
+                <Dialog.Action>
+                  <Button variant="danger-light" startIcon={<Trash />} onClick={() => handleTemplateDeletion()}>
+                    Confirm
+                  </Button>
+                </Dialog.Action>
+              </Dialog.Footer>
+            </Dialog.Content>
+            
+          </Dialog.Root>
+
+          <Layouts.Header
             navigationAction={
-              <Link startIcon={<ArrowLeft />} to="#" onClick={goBack}>
+              <Link startIcon={<ArrowLeft />} onClick={() => navigate({ pathname: getUrl()})}>
                 {getMessage('goBack')}
               </Link>
             }
             primaryAction={
-              <Button startIcon={<Plus />} onClick={() => push(getUrl('design/new'))}>
+              <Button startIcon={<Plus />} onClick={() => navigate({ pathname: getUrl(`design/new`) })}>
                 {getMessage('newTemplate')}
               </Button>
             }
             title={getMessage('plugin.name')}
             subtitle={getMessage('header.description')}
-            as="h2"
           />
 
-          <ContentLayout>
-            <TabGroup
-              label="Templates list"
-              id="tabs"
-              onTabChange={(selected) => setActiveTab(selected === 0 ? 'customEmailTemplates' : 'coreEmailTemplates')}
+          <Layouts.Content>
+            <Tabs.Root
+              value={activeTab}
+              onValueChange={(selected: string) => {
+                setActiveTab(selected)
+              }}
             >
-              <Tabs>
-                <Tab>{getMessage('customEmailTemplates')}</Tab>
-              </Tabs>
 
-              <TabPanels>
-                <TabPanel>
+              <Tabs.List aria-label="Switch between custom email designs & core email designs">
+                <Tabs.Trigger value="customEmailTemplates">
+                  {translate("PDFTypes.custom.tab.label")}
+                </Tabs.Trigger>
+                <Tabs.Trigger value="coreEmailTemplates">{translate("PDFTypes.core.tab.label")}</Tabs.Trigger>
+              </Tabs.List>
+
+              <Tabs.Content
+                style={{ borderBottomRightRadius: "6px", borderBottomLeftRadius: "6px" }}
+                value="customEmailTemplates"
+              >
+                <CustomEmailTable reload={init} data={emailTemplates} />
+              </Tabs.Content>
+              <Tabs.Content>
                   <Table
                     colCount={emailTemplatesHeaders.length}
                     rowCount={emailTemplates.length}
                     footer={
-                      <TFooter icon={<Plus />} onClick={() => push(getUrl('design/new'))}>
+                      <TFooter icon={<Plus />} onClick={() => navigate({ pathname: getUrl('design/new')})}>
                         Add another field to this collection type
                       </TFooter>
                     }
@@ -381,7 +405,7 @@ const HomePage = () => {
                           </Td>
                           <Td>
                             <Typography textColor="neutral800">
-                              {template.enabled === true ? <Eye fill="#dedede" /> : <EyeStriked fillColor="#dedede" />}
+                              {/* {template.enabled === true ? <Eye fill="#dedede" /> : <EyeStriked fillColor="#dedede" />} */}
                             </Typography>
                           </Td>
                           <Td>
@@ -391,30 +415,29 @@ const HomePage = () => {
                             <Flex>
                               <IconButton
                                 label={getMessage('tooltip.edit')}
-                                icon={<Pencil />}
-                                onClick={() => push(getUrl(`design/${template.id}`))}
-                                noBorder
-                              />
+                                onClick={() => navigate({ pathname: getUrl(`design/${template.id}`) })}
+                              >
+                                <Pencil />
+                              </IconButton>
+
 
                               <IconButton
                                 label={getMessage('tooltip.duplicate')}
-                                icon={<Duplicate fill="#000000" />}
                                 onClick={() => setDuplicateConfirmationModal(template.id)}
-                                noBorder
-                              />
+                              >
+                                <Duplicate fill="#000000" />
+                              </IconButton>
 
                               <IconButton
                                 label={getMessage('tooltip.copyTemplateId')}
                                 // FIXME: use Strapi's icon
-                                icon={<FontAwesomeIcon icon={CopyIcon} />}
                                 onClick={() => {
                                   navigator.clipboard.writeText(`${template.id}`).then(
                                     () => {
                                       toggleNotification({
                                         type: 'success',
-                                        message: {
-                                          id: `${pluginId}.notification.templateIdCopied`,
-                                        },
+                                        title: translate("success"),
+                                        message: translate("notification.templateIdCopied"),
                                       });
                                       console.log('Template ID copied to clipboard successfully!');
                                     },
@@ -423,16 +446,17 @@ const HomePage = () => {
                                     }
                                   );
                                 }}
-                                noBorder
-                              />
+                              >
+                                <FontAwesomeIcon icon={CopyIcon} />
+                              </IconButton>
 
                               <Box paddingLeft={1}>
                                 <IconButton
                                   label={getMessage('tooltip.delete')}
-                                  icon={<Trash />}
                                   onClick={() => setDeleteConfirmationModal(template.id)}
-                                  noBorder
-                                />
+                                >
+                                  <Trash />
+                                </IconButton>
                               </Box>
                             </Flex>
                           </Td>
@@ -440,45 +464,49 @@ const HomePage = () => {
                       ))}
                     </Tbody>
                   </Table>
-                </TabPanel>
 
+              </Tabs.Content>
+              {/* <Tabs> */}
+                {/* <Typography>{getMessage('customEmailTemplates')}</Typography> */}
+              {/* </Tabs> */}
+            </Tabs.Root>
+              
 
-              </TabPanels>
-            </TabGroup>
+              
 
             <FooterWrapper>
 
               {activeTab === 'customEmailTemplates' && (
                 <FooterButtonsWrapper>
                   {emailTemplates?.length > 0 && (
-                    <Button
+                    <IconButton
                       onClick={() => handleTemplatesExport()}
                       color="success"
-                      icon={<FontAwesomeIcon icon={faFileExport} />}
+                      label={getMessage('designer.exportTemplates')}
                     >
-                      {getMessage('designer.exportTemplates')}
-                    </Button>
-                  )}
+                      <FontAwesomeIcon icon={faFileExport} />
+                    </IconButton>
+                  )} 
 
-                  <Button
+                  <IconButton
                     onClick={() => {
                       emailTemplatesFileSelect?.current?.click();
                     }}
                     color="delete"
-                    icon={<FontAwesomeIcon icon={faFileImport} />}
+                    label={getMessage('designer.importTemplates')}
                   >
-                    {getMessage('designer.importTemplates')}
-                  </Button>
+                    <FontAwesomeIcon icon={faFileImport} />
+                  </IconButton>
                   <span style={{ display: 'none' }}>
                     <input type="file" ref={emailTemplatesFileSelect} onChange={handleFileChange} />
                   </span>
                 </FooterButtonsWrapper>
               )}
             </FooterWrapper>
-          </ContentLayout>
-        </>
-      )}
-    </Layout>
+          </Layouts.Content>
+        </ DesignSystemProvider>
+      {/* )} */}
+    </Page.Main>
   );
 };
 

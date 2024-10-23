@@ -1,6 +1,5 @@
-import React from 'react';
-import { BsEnvelopeHeartFill } from "react-icons/bs";
+import { PuzzlePiece } from '@strapi/icons';
 
-const PluginIcon = () => <BsEnvelopeHeartFill size={18} />;
+const PluginIcon = () => <PuzzlePiece />;
 
 export { PluginIcon };

@@ -1,8 +1,8 @@
 import React, { useCallback, useState, useEffect, memo, useRef, StrictMode } from 'react';
 import { useNotification } from "@strapi/strapi/admin";
 import { Page } from "@strapi/admin/strapi-admin";
-import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, IconButton, Field, } from '@strapi/design-system';
-import { auth, LoadingIndicatorPage } from '@strapi/helper-plugin';
+import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, IconButton, DesignSystemProvider, TooltipProvider, Field, } from '@strapi/design-system';
+// import { auth, LoadingIndicatorPage } from '@strapi/helper-plugin';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isEmpty, isFinite, merge } from 'lodash';
 import { ArrowLeft } from '@strapi/icons';
@@ -57,9 +57,9 @@ const Bar = styled.div`
   }
 `;
 
-const userInfo = auth.get("userInfo");
+// const userInfo = auth.get("userInfo");
 // const currentLanguage = strapi.config.server.locale;
-const currentLanguage = strapi.config.get('plugin.i18n.defaultLocale');
+// const currentLanguage = strapi.config.get('plugin.i18n.defaultLocale');
 
 
 const defaultEditorTools = {
@@ -77,7 +77,7 @@ const defaultEditorTools = {
 const defaultEditorAppearance = { minWidth: '100%', theme: 'dark' };
 const defaultEditorOptions = {
   appearance: defaultEditorAppearance,
-  locale: currentLanguage,
+  locale: "en",
   tools: defaultEditorTools,
   projectId: null,
   fonts: {
@@ -191,36 +191,36 @@ const defaultEditorOptions = {
     ],
   },
 };
-const currentTemplateTags = {
-  mergeTags: [
-    {
-      name: 'User',
-      mergeTags: [
-        {
-          name: 'First Name',
-          value: '{{= USER.firstname }}',
-          sample: (userInfo && userInfo.firstname) || 'John',
-        },
-        {
-          name: 'Last Name',
-          value: '{{= USER.lastname }}',
-          sample: (userInfo && userInfo.lastname) || 'Doe',
-        },
-        {
-          name: 'Email',
-          value: '{{= USER.username }}',
-          sample: (userInfo && userInfo.username) || 'john@doe.com',
-        },
-      ],
-    },
-  ],
-  mergeTagsConfig: {
-    autocompleteTriggerChar: '@',
-    delimiter: ['{{=', '}}'],
-  },
-};
+// const currentTemplateTags = {
+//   mergeTags: [
+//     {
+//       name: 'User',
+//       mergeTags: [
+//         {
+//           name: 'First Name',
+//           value: '{{= USER.firstname }}',
+//           sample: (userInfo && userInfo.firstname) || 'John',
+//         },
+//         {
+//           name: 'Last Name',
+//           value: '{{= USER.lastname }}',
+//           sample: (userInfo && userInfo.lastname) || 'Doe',
+//         },
+//         {
+//           name: 'Email',
+//           value: '{{= USER.username }}',
+//           sample: (userInfo && userInfo.username) || 'john@doe.com',
+//         },
+//       ],
+//     },
+//   ],
+//   mergeTagsConfig: {
+//     autocompleteTriggerChar: '@',
+//     delimiter: ['{{=', '}}'],
+//   },
+// };
 
-const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
+const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
   const emailEditorRef = useRef<EditorRef>(null);
   const navigate = useNavigate();
   const translate = useTr();
@@ -299,12 +299,15 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
       });
       
 
-      togglePrompt(false);
+      // togglePrompt(false);
 
       
       // TODO: restore this once useNotification is fixed
-      if (templateId === 'new' && templateId !== response.id)
-        navigate(`/plugins/${pluginId}/design/${response.id}`);
+      if (templateId === 'new' && response && templateId !== response.id){
+         navigate(`/plugins/${pluginId}/design/${response.id}`);
+
+      }
+       
 
     } catch (err: any) {
       console.error(err);
@@ -328,7 +331,7 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
 
   const onDesignLoad = () => {
     // eslint-disable-next-line no-unused-vars
-    emailEditorRef.current?.editor?.addEventListener('design:updated', (data) => {
+    emailEditorRef.current?.editor?.addEventListener('design:updated', (data: any) => {
       /*
       let { type, item, changes } = data;
       console.log("design:updated", type, item, changes);
@@ -340,22 +343,23 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
   const onLoadHandler = useCallback(() => {
     // ⬇︎ workaround to avoid firing onLoad api before setting the editor ref
     setTimeout(() => {
-      emailEditorRef.current?.editor?.addEventListener('onDesignLoad', onDesignLoad);
-      emailEditorRef.current?.editor?.registerCallback('selectImage', onSelectImageHandler);
+      // emailEditorRef.current?.editor?.addEventListener('onDesignLoad', onDesignLoad);
+      // emailEditorRef.current?.editor?.registerCallback('selectImage', onSelectImageHandler);
 
       if (templateData) emailEditorRef.current?.editor?.loadDesign(templateData.design);
     }, 500);
   }, []);
 
   // Custom media uploads
-  const [imageUploadDoneCallback, setImageUploadDoneCallback] = useState(undefined);
+  type ImageUploadCallback = ((data: { url: string }) => void) | undefined;
+  const [imageUploadDoneCallback, setImageUploadDoneCallback] = useState<ImageUploadCallback>(undefined);
 
-  const onSelectImageHandler = (data, done) => {
+  const onSelectImageHandler = (data: any, done: any) => {
     setImageUploadDoneCallback(() => done);
     setIsMediaLibraryOpen(true);
   };
 
-  const handleMediaLibraryChange = (data) => {
+  const handleMediaLibraryChange = (data: any) => {
     if (imageUploadDoneCallback) {
       imageUploadDoneCallback({ url: data.url });
       setImageUploadDoneCallback(undefined);
@@ -368,11 +372,18 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
 
   /* useEffects */
   useEffect(() => {
+    console.log("EmailDesignerPage mounted with templateId:", templateId, "and coreEmailType:", coreEmailType);
     // load the editor config
-    getFullEditorConfig().then((config) => {
-      setEditorOptions(config);
-      setServerConfigLoaded(true);
-    });
+    getFullEditorConfig()
+      .then((config) => {
+        setEditorOptions(config);
+        setServerConfigLoaded(true);
+        console.error("Error loading editor config:");
+      })
+      .catch((err) => {
+        console.error("Error loading editor config:", err);
+        // Optionnel : définir un état d'erreur pour afficher un message d'erreur à l'utilisateur
+      });
     return () => {
       emailEditorRef.current?.editor?.destroy(); // release react-email-editor on unmount
     };
@@ -419,6 +430,10 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
     }
 
   useEffect(() => {
+    if (!templateId && !coreEmailType) {
+      console.error("No templateId or coreEmailType found");
+      return;
+    }
     init();
   }, [templateId, coreEmailType]);
 
@@ -430,12 +445,11 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
     }, 600);
   }, [templateData]);
 
-  return !templateData && templateId !== 'new' ? (
-    <LoadingIndicatorPage />
-  ) : (
+  return (
     <Page.Main>
       <Page.Title>{translate("page.design.title")}</Page.Title>
       <DesignerContainer>
+      <DesignSystemProvider>
         <Header>
           <IconButton
             style={{ marginTop: "19px", padding: "10px" }}
@@ -487,20 +501,20 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
                 />
                 <Field.Error />
               </Field.Root>
-              {/* <TextInput
+              <TextInput
                 style={{
                   width: '100%',
                 }}
                 name="name"
                 disabled={isCore}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   setTemplateData((state) => ({ ...state, name: e.target.value }));
                 }}
                 placeholder={
                   isCore ? getMessage('coreEmailTypeLabel') : getMessage('designer.templateNameInputFieldPlaceholder')
                 }
                 value={isCore ? getMessage(coreEmailType) : templateData?.name || ''}
-              /> */}
+              />
             </Box>
             <Button onClick={saveDesign} color="success">
               {getMessage('designer.action.saveTemplate')}
@@ -517,6 +531,7 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
               }
             }}
           >
+
             <Tabs.List aria-label="Email designer tabs">
               <Tabs.Trigger value="html">{getMessage('designer.version.html')}</Tabs.Trigger>
               <Tabs.Trigger value="text">{getMessage('designer.version.text')}</Tabs.Trigger>
@@ -560,9 +575,10 @@ const EmailDesignerPage = ({ isCore = false }: { isCore?: boolean }) => {
               </Tabs.Content>
             </Box>
           </Tabs.Root>
-      </DesignerContainer>
+      </DesignSystemProvider>
+      </DesignerContainer>  
     </Page.Main>
   );
 };
 
-export default memo(EmailDesignerPage, shallowIsEqual);
+export default memo(Designer , shallowIsEqual);

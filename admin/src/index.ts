@@ -8,14 +8,14 @@ import { PluginIcon } from './components/PluginIcon';
 export default {
   register(app: any) {
     app.addMenuLink({
-      to: `/plugins/${pluginId}`,
+      to: `plugins/${pluginId}`,
       icon: PluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
         defaultMessage: pluginId,
       },
       Component: async () => {
-        const { default: App } = await import("./pages/App");
+        const { App } = await import("./pages/App");
         return App;
       },
       permissions: APP_PERMISSIONS["menu-link"],
@@ -28,7 +28,6 @@ export default {
     });
   },
 
-  bootstrap(app) {},
   async registerTrads({ locales }: { locales: string[] }) {
     const importedTrads = await Promise.all(
       locales.map((locale) => {

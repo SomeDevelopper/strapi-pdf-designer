@@ -77,6 +77,16 @@
   "input.label.templateName": "Template Name",
   "input.placeholder.templateName": "E.g. Welcome Email",
   "input.label.subject": "Email Subject",
-  "input.placeholder.subject": "E.g. Welcome to Our Platform"
+  "input.placeholder.subject": "E.g. Welcome to Our Platform",
+
+  "PDFTypes.core.tab.label": "Core Pdf",
+  "PDFTypes.custom.tab.label": "Custom Pdf",
+
+  "confirm.title": "Confirm Action",
+  "confirm.singleImport": "Are you sure you want to import this email template? This will replace the current design you are working on.",
+  "confirm.import.message": "Are you sure you want to import these email templates? Existing templates with the same reference ID will be replaced.",
+  "confirm.duplicate.message": "Are you sure you want to duplicate this email template?",
+  "confirm.delete.message": "Are you sure you want to delete this email template?",
+  "import": "Import"
 
 }

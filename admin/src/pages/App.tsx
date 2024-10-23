@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import { Page } from "@strapi/strapi/admin";
 
@@ -20,13 +19,13 @@ const App = () => {
     <PluginViewWrapper>
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path={`/plugins/${pluginId}/design/:templateId`} element={<Designer />} />
-        <Route path={`/plugins/${pluginId}/core/:coreEmailType`} element={<Designer isCore />} />
-        <Route path={`/plugins/${pluginId}/how-to`} element={<HowToPage />} />
+        <Route path={`designn/:templateId`} element={<Designer />} />
+        <Route path={`core/:coreEmailType`} element={<Designer isCore />} />
+        <Route path={`how-to`} element={<HowToPage />} />
         <Route path="*" element={<Page.Error />} />
       </Routes>
     </PluginViewWrapper>
   );
 };
 
-export default App;
+export { App };
