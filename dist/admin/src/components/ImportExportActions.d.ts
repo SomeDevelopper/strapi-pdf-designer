@@ -1,4 +1,4 @@
-import { EmailTemplate } from "../types";
+import { PDFTemplate } from "../types";
 /**
  * Props needed for the ImportExportActions component
  */
@@ -8,7 +8,7 @@ type ImportExportActionsProps = {
      *
      * @default []
      */
-    data: EmailTemplate[];
+    data: PDFTemplate[];
     /**
      * The function that handles the export of templates
      */

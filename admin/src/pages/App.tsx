@@ -19,8 +19,7 @@ const App = () => {
     <PluginViewWrapper>
       <Routes>
         <Route index element={<HomePage />} />
-        <Route path={`designn/:templateId`} element={<Designer />} />
-        <Route path={`core/:coreEmailType`} element={<Designer isCore />} />
+        <Route path={`design/:templateId`} element={<Designer />} />
         <Route path={`how-to`} element={<HowToPage />} />
         <Route path="*" element={<Page.Error />} />
       </Routes>

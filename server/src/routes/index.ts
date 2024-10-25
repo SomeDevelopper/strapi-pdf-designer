@@ -53,6 +53,12 @@ export default [
     handler: 'designer.saveCoreEmailType',
     config: { policies: [], auth: false  },
   },
+  {
+    method: 'GET',
+    path: '/generate-pdf/:templateReferenceId',
+    handler: 'pdf.generate',
+    config: { policies: [], auth: false  },
+  }
   // {
   //   method: "GET",
   //   path: "/download/:id",

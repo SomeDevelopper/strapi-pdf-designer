@@ -1,6 +1,6 @@
-import type { EmailTemplate } from "../types";
+import type { PDFTemplate } from "../types";
 declare const CustomEmailTable: ({ data, reload }: {
-    data: EmailTemplate[];
+    data: PDFTemplate[];
     reload: Function;
 }) => import("react/jsx-runtime").JSX.Element;
 export default CustomEmailTable;

@@ -1,13 +1,13 @@
 import React, { useCallback, useState, useEffect, memo, useRef, StrictMode } from 'react';
 import { useNotification } from "@strapi/strapi/admin";
 import { Page } from "@strapi/admin/strapi-admin";
-import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, IconButton, DesignSystemProvider, TooltipProvider, Field, } from '@strapi/design-system';
+import { Box, Typography, Flex, Tabs, TextInput, Button, Textarea, IconButton, DesignSystemProvider, darkTheme, TooltipProvider, Field, } from '@strapi/design-system';
 // import { auth, LoadingIndicatorPage } from '@strapi/helper-plugin';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { isEmpty, isFinite, merge } from 'lodash';
 import { ArrowLeft } from '@strapi/icons';
 import { getUrl, standardEmailRegistrationTemplate } from "../constants";
-import { EmailConfig, EmailTemplate } from "../types";
+import { PDFConfig, PDFTemplate } from "../types";
 import PropTypes from 'prop-types';
 import striptags from 'striptags';
 import EmailEditor, { EditorRef } from 'react-email-editor';
@@ -23,6 +23,7 @@ import {
 } from "../services";
 import { pluginId } from '../pluginId';
 import { getMessage } from '../utils/getMessage';
+import ImportSingleDesign from '../components/ImportSingleDesign';
 // import MediaLibrary from '../../components/MediaLibrary';
 const __DEV__ = process.env.NODE_ENV !== 'production';
 
@@ -226,7 +227,7 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
   const translate = useTr();
 
   const { templateId, coreEmailType } = useParams();
-  const [templateData, setTemplateData] = useState<EmailTemplate>();
+  const [templateData, setTemplateData] = useState<PDFTemplate>();
   const [errorRefId, setErrorRefId] = useState("");
   const [enablePrompt, togglePrompt] = useState(false);
   const [bodyText, setBodyText] = useState('');
@@ -236,7 +237,7 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
   const [editorAppearance, setEditorAppearance] = useState({ ...defaultEditorAppearance });
   const [editorTools, setEditorTools] = useState({ ...defaultEditorTools });
   // const [editorOptions, setEditorOptions] = useState<EmailConfig>({ ...defaultEditorOptions, ...currentTemplateTags });
-  const [editorOptions, setEditorOptions] = useState<EmailConfig>();
+  const [editorOptions, setEditorOptions] = useState<PDFConfig>();
   const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
   const [filesToUpload /* , setFilesToUpload */] = useState({});
   const { toggleNotification } = useNotification();
@@ -300,11 +301,11 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
       
 
       // togglePrompt(false);
+      // console.log(response.templ)
 
-      
       // TODO: restore this once useNotification is fixed
-      if (templateId === 'new' && response && templateId !== response.id){
-         navigate(`/plugins/${pluginId}/design/${response.id}`);
+      if (templateId === 'new' && response && templateId !== response.templateCreate.id){
+         navigate(`/plugins/${pluginId}/design/${response.templateCreate.templateReferenceId}`);
 
       }
        
@@ -328,6 +329,14 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
       }
     }
   };
+
+  const preview = (templateReferenceId: number) => {
+    const baseUrl = window.location.origin; // Récupère la base URL (http://localhost:1337)
+    const pdfUrl = `${baseUrl}/pdf-designer-5/generate-pdf/${templateReferenceId}`;
+
+    // Redirige vers l'URL complète
+    window.open(pdfUrl);
+  }
 
   const onDesignLoad = () => {
     // eslint-disable-next-line no-unused-vars
@@ -398,7 +407,7 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
       return;
 
 
-      let _templateData: EmailTemplate = {};
+      let _templateData: PDFTemplate = {};
 
       if (templateId) _templateData = await getTemplateById(templateId);
       else if (coreEmailType) _templateData = await getCoreTemplate(coreEmailType);
@@ -449,7 +458,7 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
     <Page.Main>
       <Page.Title>{translate("page.design.title")}</Page.Title>
       <DesignerContainer>
-      <DesignSystemProvider>
+      <DesignSystemProvider theme={darkTheme}>
         <Header>
           <IconButton
             style={{ marginTop: "19px", padding: "10px" }}
@@ -487,38 +496,35 @@ const Designer  = ({ isCore = false }: { isCore?: boolean }) => {
                 </Field.Root>
               </Box>
             )}
-            <Box padding={0} style={{ width: isCore ? 450 : '100%', paddingRight: 10 }}>
+            <Box padding={0} style={{ width: isCore ? 450 : '60%', paddingRight: 10 }}>
               <Field.Root required>
                 <Field.Label>{translate("input.placeholder.subject")}</Field.Label>
                 <Field.Input
-                  disabled={isCore}
                   onChange={(value: any) => {
-                    setTemplateData((state) => ({ ...state, subject: value.target.value }));
+                    setTemplateData((state) => ({ ...state, name: value.target.value }));
                   }}
-                  // value={templateData?.subject || ""}
-                  value={isCore ? getMessage(coreEmailType) : templateData?.name || ''}
-                  placeholder={translate("input.placeholder.subject")}
+                  value={templateData?.name || ""}
+                  placeholder={translate("input.placeholder.templateName")}
                 />
                 <Field.Error />
               </Field.Root>
-              <TextInput
-                style={{
-                  width: '100%',
-                }}
-                name="name"
-                disabled={isCore}
-                onChange={(e: any) => {
-                  setTemplateData((state) => ({ ...state, name: e.target.value }));
-                }}
-                placeholder={
-                  isCore ? getMessage('coreEmailTypeLabel') : getMessage('designer.templateNameInputFieldPlaceholder')
-                }
-                value={isCore ? getMessage(coreEmailType) : templateData?.name || ''}
-              />
             </Box>
-            <Button onClick={saveDesign} color="success">
-              {getMessage('designer.action.saveTemplate')}
+            <Box style={{ width: "100%", maxWidth: "100px" }}>
+            <ImportSingleDesign emailEditorRef={emailEditorRef} />
+          </Box>
+          <Box style={{ width: "100%", maxWidth: "100px" }}>
+            <Button onClick={() => saveDesign()} style={{ marginTop: "19px", height: "38px", width: "100%" }}>
+              {translate("save")}
             </Button>
+          </Box>
+          {templateData && templateData.templateReferenceId !== undefined ? (
+            <Box style={{ width: "100%", maxWidth: "100px" }}>
+            <Button onClick={() => preview(templateData.templateReferenceId)} style={{ marginTop: "19px", height: "38px", width: "100%" }}>
+              {translate("preview")}
+            </Button>
+          </Box>
+          ) : null}
+          
           </Bar>
         </Header>
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import { pluginName } from "../pluginId";
-import { EmailConfig, EmailTemplate } from "../types";
+import { createdPDF, PDFConfig, PDFTemplate } from "../types";
 
 /**
  * Date format for displaying dates in the UI
@@ -12,7 +12,7 @@ export const DATE_FORMAT = "MMM DD, YYYY [at] h:mmA";
  * Fetches all email templates
  */
 export const getTemplatesData = async () => {
-  const { data } = await axios.get<EmailTemplate[]>(`/${pluginName}/templates`);
+  const { data } = await axios.get<PDFTemplate[]>(`/${pluginName}/templates`);
   data.forEach((template) => {
     template.createdAt = dayjs(template.createdAt).format(DATE_FORMAT);
     template.updatedAt = dayjs(template.updatedAt).format(DATE_FORMAT);
@@ -32,7 +32,7 @@ export const getEditorConfig = async (key: string = "editor") => {
  * Get the full editor configuration
  */
 export const getFullEditorConfig = async () => {
-  const { data } = await axios.get<EmailConfig>(`/${pluginName}/config`);
+  const { data } = await axios.get<PDFConfig>(`/${pluginName}/config`);
   return data;
 };
 
@@ -40,7 +40,7 @@ export const getFullEditorConfig = async () => {
  * Get the email template by the ID
  */
 export const getTemplateById = async (id: string) => {
-  const { data } = await axios.get<EmailTemplate>(`/${pluginName}/templates/${id}`);
+  const { data } = await axios.get<PDFTemplate>(`/${pluginName}/templates/${id}`);
   return data;
 };
 
@@ -48,23 +48,23 @@ export const getTemplateById = async (id: string) => {
  * Get the core email template by the type
  */
 export const getCoreTemplate = async (coreEmailType: string) => {
-  const { data } = await axios.get<EmailTemplate>(`/${pluginName}/core/${coreEmailType}`);
+  const { data } = await axios.get<PDFTemplate>(`/${pluginName}/core/${coreEmailType}`);
   return data;
 };
 
 /**
  * Create/Update a custom email template
  */
-export const createTemplate = async (templateId: string, data: EmailTemplate) => {
-  const { data: response } = await axios.post<EmailTemplate>(`/${pluginName}/templates/${templateId}`, data);
+export const createTemplate = async (templateId: string, data: PDFTemplate) => {
+  const { data: response } = await axios.post<createdPDF>(`/${pluginName}/templates/${templateId}`, data);
   return response;
 };
 
 /**
  * Update a core email template
  */
-export const updateCoreTemplate = async (coreEmailType: string, data: EmailTemplate) => {
-  const { data: response } = await axios.post<EmailTemplate>(`/${pluginName}/core/${coreEmailType}`, data);
+export const updateCoreTemplate = async (coreEmailType: string, data: PDFTemplate) => {
+  const { data: response } = await axios.post<PDFTemplate>(`/${pluginName}/core/${coreEmailType}`, data);
   return response;
 };
 
@@ -72,7 +72,7 @@ export const updateCoreTemplate = async (coreEmailType: string, data: EmailTempl
  * Duplicate a custom email template
  */
 export const duplicateTemplate = async (id: string) => {
-  const { data } = await axios.post<EmailTemplate>(`/${pluginName}/templates/duplicate/${id}`);
+  const { data } = await axios.post<PDFTemplate>(`/${pluginName}/templates/duplicate/${id}`);
   return data;
 };
 

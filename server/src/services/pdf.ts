@@ -2,6 +2,7 @@ import _ from 'lodash';
 import decode from 'decode-html';
 import { htmlToText } from 'html-to-text';
 import html_to_pdf from 'html-pdf-node';
+import Mustache from "mustache";
 
 
 const templateSettings = {
@@ -87,8 +88,8 @@ export default ({ strapi }: { strapi: StrapiInstance }) => {
 
       const templatedAttributes = attributes.reduce(
         (compiled, attribute) =>
-          pdfTemplate[attribute as keyof PdfTemplate]
-            ? { ...compiled, [attribute]: templater(pdfTemplate[attribute as keyof PdfTemplate] as string)(data) }
+          pdfTemplate[attribute]
+            ? Object.assign(compiled, { [attribute]: Mustache.render(pdfTemplate[attribute], data) })
             : compiled,
         {} as PdfTemplate
       );

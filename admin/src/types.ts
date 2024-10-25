@@ -1,12 +1,13 @@
 import type { EmailEditorProps } from "react-email-editor";
 
-export type EmailTemplate = {
+export type PDFTemplate = {
   templateReferenceId?: number;
   design?: any;
   name?: string;
   subject?: string;
   bodyHtml?: string | null;
   bodyText?: string | null;
+  locale?: string | null;
   tags?: Array<string>;
   createdAt?: string | Date;
   updatedAt?: string | Date;
@@ -16,7 +17,13 @@ export type EmailTemplate = {
   import?: boolean;
 };
 
-export type EmailConfig = Pick<
+export type createdPDF = {
+  values: any;
+  templateCreate:PDFTemplate;
+  success: boolean;
+}
+
+export type PDFConfig = Pick<
   NonNullable<EmailEditorProps["options"]>,
   | "projectId"
   | "locale"

@@ -27,11 +27,11 @@ import { useIntl } from "react-intl";
 import { useNavigate } from "react-router-dom";
 import { getUrl } from "../constants";
 import { deleteTemplate, downloadTemplate, duplicateTemplate, getTemplatesData } from "../services";
-import type { EmailTemplate } from "../types";
+import type { PDFTemplate } from "../types";
 import { getTrad } from "../utils/getTrad";
 import ImportExportActions from "./ImportExportActions";
 
-const CustomEmailTable = ({ data = [], reload }: { data: EmailTemplate[]; reload: Function }) => {
+const CustomEmailTable = ({ data = [], reload }: { data: PDFTemplate[]; reload: Function }) => {
   const { formatMessage } = useIntl();
   const navigate = useNavigate();
   const { toggleNotification } = useNotification();
@@ -100,13 +100,15 @@ const CustomEmailTable = ({ data = [], reload }: { data: EmailTemplate[]; reload
   };
 
   const emailTemplatesHeaders = [
-    { name: formatMessage({ id: getTrad("table.header.name") }), value: "name" },
+    { name: formatMessage({ id: getTrad("table.name") }), value: "name" },
+    { name: formatMessage({ id: getTrad("table.header.templateId") }), value: "templateID" },
     {
       name: formatMessage({ id: getTrad("table.header.templateReferenceId") }),
       value: "templateReferenceId",
     },
     { name: formatMessage({ id: getTrad("table.header.createdAt") }), value: "createdAt" },
-  ];
+  ]
+
   if (data.length === 0) {
     return (
       <Box padding={8}>
@@ -211,6 +213,9 @@ const CustomEmailTable = ({ data = [], reload }: { data: EmailTemplate[]; reload
                   <Typography style={{ fontWeight: "bold" }} textColor="neutral800">
                     {entry.name}
                   </Typography>
+                </Td>
+                <Td>
+                  <Typography textColor="neutral800">{entry.id}</Typography>
                 </Td>
                 <Td>
                   <Typography textColor="neutral800">{entry.templateReferenceId}</Typography>

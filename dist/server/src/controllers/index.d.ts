@@ -11,5 +11,10 @@ declare const _default: {
         getCoreEmailType: (ctx: any) => Promise<any>;
         saveCoreEmailType: (ctx: any) => Promise<any>;
     };
+    pdf: {
+        getTemplates: (ctx: any) => Promise<void>;
+        getTemplate: (ctx: any) => Promise<void>;
+        generate: (ctx: any) => Promise<any>;
+    };
 };
 export default _default;

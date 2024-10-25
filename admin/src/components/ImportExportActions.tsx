@@ -7,7 +7,7 @@ import { isEmpty, uniqBy } from "lodash";
 import React, { useRef, useState } from "react";
 import { useIntl } from "react-intl";
 import { createTemplate, DATE_FORMAT } from "../services";
-import { EmailTemplate } from "../types";
+import { PDFTemplate } from "../types";
 import { getTrad } from "../utils/getTrad";
 import GlobalLoader from "./GlobalLoader";
 
@@ -20,7 +20,7 @@ type ImportExportActionsProps = {
    *
    * @default []
    */
-  data: EmailTemplate[];
+  data: PDFTemplate[];
   /**
    * The function that handles the export of templates
    */
@@ -41,7 +41,7 @@ const ImportExportActions = ({ data = [], reload, handleTemplatesExport }: Impor
   const emailTemplatesFileSelect = useRef<HTMLInputElement>(null);
 
   const [importConfirmationModal, setImportConfirmationModal] = useState(false);
-  const [importedTemplates, setImportedTemplates] = useState<EmailTemplate[]>([]);
+  const [importedTemplates, setImportedTemplates] = useState<PDFTemplate[]>([]);
   const [importLoading, setImportLoading] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {

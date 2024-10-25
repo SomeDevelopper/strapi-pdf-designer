@@ -63,13 +63,13 @@ export default ({ strapi }: { strapi: Core.Strapi }): TemplateService => {
      */
     async create(values: TemplateValues) {
       try {
-        const test = await strapi.query('plugin::pdf-designer-5.pdf-template').create({ data: values });
-        if (!test) {
+        const template = await strapi.query('plugin::pdf-designer-5.pdf-template').create({ data: values });
+        if (!template) {
           throw new Error('Failed to create template');
         }
         return {
           values: values,
-          templateCreate: test,
+          templateCreate: template,
           success: true
         };
       } catch (error) {

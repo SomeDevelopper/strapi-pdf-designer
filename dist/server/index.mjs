@@ -2,6 +2,7 @@ import _, { isNil } from "lodash";
 import { htmlToText } from "html-to-text";
 import decode from "decode-html";
 import html_to_pdf from "html-pdf-node";
+import Mustache from "mustache";
 const config$1 = {
   default: () => ({
     mergeTagsConfig: {
@@ -425,9 +426,55 @@ const controller = ({ strapi: strapi2 }) => ({
     ctx.send(config2);
   }
 });
+const pdf$1 = {
+  /**
+   * Get template design action.
+   *
+   * @return {Object}
+   */
+  getTemplates: async (ctx) => {
+    const templates = await strapi.plugin(config$1.pluginName).service("template").findMany();
+    ctx.send(templates);
+  },
+  /**
+   * Get template design action.
+   *
+   * @return {Object}
+   */
+  getTemplate: async (ctx) => {
+    if (!ctx.params.templateId) {
+      console.log("No template ID specified");
+      throw Error;
+    }
+    try {
+      const template2 = await strapi.plugin(config$1.pluginName).service("template").findOne({ id: ctx.params.templateId });
+      ctx.send(template2);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  generate: async (ctx) => {
+    try {
+      const { templateReferenceId } = ctx.params;
+      const { data, footerString } = ctx.request.body;
+      if (!templateReferenceId) {
+        return ctx.throw(400, "templateReferenceId is required");
+      }
+      const pdfTemplate2 = { templateReferenceId };
+      const data1 = { data };
+      const myFooter = { footerString };
+      const pdfBuffer = await strapi.plugin("pdf-designer-5").service("pdf").generatePdf(pdfTemplate2, data1, myFooter);
+      ctx.set("Content-Type", "application/pdf");
+      ctx.send(pdfBuffer);
+    } catch (error) {
+      strapi.log.error(error);
+    }
+  }
+};
 const controllers = {
   config: controller,
-  designer
+  designer,
+  pdf: pdf$1
 };
 const destroy = ({ strapi: strapi2 }) => {
 };
@@ -489,6 +536,12 @@ const routes = [
     path: "/core/:coreEmailType",
     handler: "designer.saveCoreEmailType",
     config: { policies: [], auth: false }
+  },
+  {
+    method: "GET",
+    path: "/generate-pdf/:templateReferenceId",
+    handler: "pdf.generate",
+    config: { policies: [], auth: false }
   }
   // {
   //   method: "GET",
@@ -536,13 +589,13 @@ const template = ({ strapi: strapi2 }) => {
      */
     async create(values) {
       try {
-        const test = await strapi2.query("plugin::pdf-designer-5.pdf-template").create({ data: values });
-        if (!test) {
+        const template2 = await strapi2.query("plugin::pdf-designer-5.pdf-template").create({ data: values });
+        if (!template2) {
           throw new Error("Failed to create template");
         }
         return {
           values,
-          templateCreate: test,
+          templateCreate: template2,
           success: true
         };
       } catch (error) {
@@ -591,13 +644,7 @@ const config = ({ strapi: strapi2 }) => {
     }
   };
 };
-const templateSettings = {
-  evaluate: /\{\{(.+?)\}\}/g,
-  interpolate: /\{\{=(.+?)\}\}/g,
-  escape: /\{\{-(.+?)\}\}/g
-};
 const pdf = ({ strapi: strapi2 }) => {
-  const templater = (tmpl) => _.template(tmpl, templateSettings);
   const isMantainLegacyTemplateActive = () => _.get(strapi2.plugins, "pdf-designer.config.mantainLegacyTemplate", true);
   const generatePdf = async (pdfTemplate2 = {}, data = {}, myFooter = {}) => {
     const { templateReferenceId } = pdfTemplate2;
@@ -626,7 +673,7 @@ const pdf = ({ strapi: strapi2 }) => {
         text: decode(bodyText)
       };
       const templatedAttributes = attributes2.reduce(
-        (compiled, attribute) => pdfTemplate2[attribute] ? { ...compiled, [attribute]: templater(pdfTemplate2[attribute])(data) } : compiled,
+        (compiled, attribute) => pdfTemplate2[attribute] ? Object.assign(compiled, { [attribute]: Mustache.render(pdfTemplate2[attribute], data) }) : compiled,
         {}
       );
       const options2 = {
@@ -664,3 +711,4 @@ const index = {
 export {
   index as default
 };
+//# sourceMappingURL=index.mjs.map
