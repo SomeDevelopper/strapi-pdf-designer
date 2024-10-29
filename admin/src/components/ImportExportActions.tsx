@@ -38,7 +38,7 @@ const ImportExportActions = ({ data = [], reload, handleTemplatesExport }: Impor
   const { formatMessage } = useIntl();
   const { toggleNotification } = useNotification();
   // Ref for the file input
-  const emailTemplatesFileSelect = useRef<HTMLInputElement>(null);
+  const pdfTemplatesFileSelect = useRef<HTMLInputElement>(null);
 
   const [importConfirmationModal, setImportConfirmationModal] = useState(false);
   const [importedTemplates, setImportedTemplates] = useState<PDFTemplate[]>([]);
@@ -114,8 +114,8 @@ const ImportExportActions = ({ data = [], reload, handleTemplatesExport }: Impor
         onOpenChange={() => {
           setImportConfirmationModal((s: boolean) => !s);
           // Reset the file input
-          if (emailTemplatesFileSelect.current) {
-            emailTemplatesFileSelect.current.value = "";
+          if (pdfTemplatesFileSelect.current) {
+            pdfTemplatesFileSelect.current.value = "";
           }
         }}
       >
@@ -151,7 +151,7 @@ const ImportExportActions = ({ data = [], reload, handleTemplatesExport }: Impor
 
         <Button
           onClick={() => {
-            emailTemplatesFileSelect?.current?.click();
+            pdfTemplatesFileSelect?.current?.click();
           }}
           startIcon={<CloudUpload />}
         >
@@ -159,7 +159,7 @@ const ImportExportActions = ({ data = [], reload, handleTemplatesExport }: Impor
         </Button>
       </Flex>
       {/* Accept only json files */}
-      <input accept=".json" hidden type="file" ref={emailTemplatesFileSelect} onChange={handleFileChange} />
+      <input accept=".json" hidden type="file" ref={pdfTemplatesFileSelect} onChange={handleFileChange} />
     </>
   );
 };

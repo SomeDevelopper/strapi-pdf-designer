@@ -149,120 +149,38 @@ export default {
     return null;
   },
 
-  /**
-   * Strapi's core templates
+    /**
+   * Downloads a template
    */
-
-  /**
-   * Get strapi's core message template action.
-   *
-   * @return {Object}
-   */
-  getCoreEmailType: async (ctx) => {
-    const { coreEmailType } = ctx.params;
-    if (
-      !["user-address-confirmation", "reset-password"].includes(coreEmailType)
-    ) {
-      console.log('No valid core message key')
-      return ctx.badRequest("No valid core message key");
-    }
-    const pluginStoreEmailKey =
-      coreEmailType === "user-address-confirmation"
-        ? "email_confirmation"
-        : "reset_password";
-
-    const pluginStore = await strapi.store({
-      environment: "",
-      type: "plugin",
-      name: "users-permissions",
-    });
-
-    let data = await pluginStore
-      .get({ key: "email" })
-      .then((storeEmail) => storeEmail[pluginStoreEmailKey]);
-
-    data = {
-      ...(data && data.options
-        ? {
-            from: data.options.from,
-            message: data.options.message,
-            subject: data.options.object
-              .replace(/<%|&#x3C;%/g, "{{")
-              .replace(/%>|%&#x3E;/g, "}}"),
-            bodyHtml: data.options.message
-              .replace(/<%|&#x3C;%/g, "{{")
-              .replace(/%>|%&#x3E;/g, "}}"),
-            bodyText: htmlToText(
-              data.options.message
-                .replace(/<%|&#x3C;%/g, "{{")
-                .replace(/%>|%&#x3E;/g, "}}"),
-              {
-                wordwrap: 130,
-                trimEmptyLines: true,
-                uppercaseHeadings: false,
-              }
-            ),
-          }
-        : {}),
-      coreEmailType,
-      design: data.design,
-    };
-    ctx.send(data);
-  },
-
-  /**
-   * Save strapi's core message template action.
-   *
-   * @return {Object}
-   */
-  saveCoreEmailType: async (ctx) => {
-    const { coreEmailType } = ctx.params;
-    if (
-      !["user-address-confirmation", "reset-password"].includes(coreEmailType)
-    ) {
-      console.log('No valide core message key')
-      return ctx.badRequest("No valid core message key");
-    }
-    const pluginStoreEmailKey =
-      coreEmailType === "user-address-confirmation"
-        ? "email_confirmation"
-        : "reset_password";
-
-    const pluginStore = await strapi.store({
-      environment: "",
-      type: "plugin",
-      name: "users-permissions",
-    });
-
-    const emailsConfig = await pluginStore.get({ key: "email" });
-    if(!emailsConfig) {
-      console.log('An error has occured when getting email config')
-      return
-    }
-    const config = strapi.plugin("pdf-designer").services.config.getConfig();
-
-    emailsConfig[pluginStoreEmailKey] = {
-      ...emailsConfig[pluginStoreEmailKey],
-      options: {
-        ...(emailsConfig[pluginStoreEmailKey]
-          ? emailsConfig[pluginStoreEmailKey].options
-          : {}),
-        message: ctx.request.body.message
-          .replace(/{{/g, "<%")
-          .replace(/}}/g, "%>"),
-        object: ctx.request.body.subject
-          .replace(/{{/g, "<%")
-          .replace(/}}/g, "%>"),
-        // TODO: from: ctx.request.from,
-        // TODO: response_email: ctx.request.response_email,
-      },
-      design: ctx.request.body.design,
-    };
-    try {
-      await pluginStore.set({ key: "email", value: emailsConfig });
-      ctx.send({ message: "Saved" });
-    }catch (error) {
-      console.log(error)
-    }
-  },
+    download: async (ctx) => {
+      try {
+        const { id } = ctx.params;
+        const { type = "json" } = ctx.query;
+        // get the template by id
+        const template = await strapi.plugin(configImport.pluginName).service("template").findOne({ id });
+        if (!template) {
+          return ctx.notFound("Template not found");
+        }
+        let fileContent, fileName;
+        if (type === "json") {
+          // Serve JSON design
+          fileContent = JSON.stringify(template.design, null, 2);
+          fileName = `template-${id}.json`;
+          ctx.set("Content-Type", "application/json");
+        } else if (type === "html") {
+          // Serve HTML design
+          fileContent = template.bodyHtml;
+          fileName = `template-${id}.html`;
+          ctx.set("Content-Type", "text/html");
+        } else {
+          return ctx.badRequest('Invalid type, must be either "json" or "html".');
+        }
+        // Set the content disposition to prompt a file download
+        ctx.set("Content-Disposition", `attachment; filename="${fileName}"`);
+        ctx.send(fileContent);
+      } catch (err) {
+        strapi.log.error("Error downloading template:", err);
+        ctx.internalServerError("Failed to download the template");
+      }
+    },
 };

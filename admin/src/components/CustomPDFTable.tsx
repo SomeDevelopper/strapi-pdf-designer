@@ -100,7 +100,7 @@ const CustomEmailTable = ({ data = [], reload }: { data: PDFTemplate[]; reload: 
   };
 
   const emailTemplatesHeaders = [
-    { name: formatMessage({ id: getTrad("table.name") }), value: "name" },
+    { name: formatMessage({ id: getTrad("table.header.name") }), value: "name" },
     { name: formatMessage({ id: getTrad("table.header.templateId") }), value: "templateID" },
     {
       name: formatMessage({ id: getTrad("table.header.templateReferenceId") }),

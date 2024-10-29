@@ -44,8 +44,8 @@ export default {
 
   generate: async (ctx) => {
     try {
-        const { templateReferenceId } = ctx.params;  // Récupère l'ID depuis l'URL
-        const { data, footerString } = ctx.request.body;  // Données supplémentaires à envoyer dans le corps de la requête
+        const { templateReferenceId } = ctx.params; 
+        const { data, footerString } = ctx.request.body;
   
         if (!templateReferenceId) {
           return ctx.throw(400, 'templateReferenceId is required');
@@ -55,13 +55,11 @@ export default {
         const data1 = { data }
         const myFooter = { footerString };
   
-        // Appel au service `generatePdf` pour générer le PDF
         const pdfBuffer = await strapi
           .plugin('pdf-designer-5')
           .service('pdf')
           .generatePdf(pdfTemplate, data1, myFooter);
   
-        // Retourner le PDF en tant que réponse
         ctx.set('Content-Type', 'application/pdf');
         ctx.send(pdfBuffer);
   

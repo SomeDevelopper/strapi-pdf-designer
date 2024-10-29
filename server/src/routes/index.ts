@@ -43,26 +43,14 @@ export default [
   },
   {
     method: 'GET',
-    path: '/core/:coreEmailType',
-    handler: 'designer.getCoreEmailType',
-    config: { policies: [], auth: false  },
-  },
-  {
-    method: 'POST',
-    path: '/core/:coreEmailType',
-    handler: 'designer.saveCoreEmailType',
-    config: { policies: [], auth: false  },
-  },
-  {
-    method: 'GET',
     path: '/generate-pdf/:templateReferenceId',
     handler: 'pdf.generate',
     config: { policies: [], auth: false  },
-  }
-  // {
-  //   method: "GET",
-  //   path: "/download/:id",
-  //   handler: "designer.download",
-  //   config: { policies: [], auth: false },
-  // },
+  },
+  {
+    method: "GET",
+    path: "/download/:id",
+    handler: "designer.download",
+    config: { policies: [], auth: false },
+  },
 ];

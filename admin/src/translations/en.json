@@ -46,6 +46,8 @@
   "tooltip.delete": "Delete Template",
   "tooltip.duplicate": "Duplicate",
   "tooltip.edit": "Edit",
+  "tooltip.downloadHtml": "Download HTML",
+  "tooltip.downloadDesign": "Download Design(JSON)",
   "user-address-confirmation": "User address confirmation",
 
   "error": "Error",

@@ -7,9 +7,9 @@ import { EditorRef } from "react-email-editor";
 import { useTr } from "../hooks/useTr";
 
 type ImportSingleDesignProps = {
-  emailEditorRef: React.RefObject<EditorRef>;
+  pdfEditorRef: React.RefObject<EditorRef>;
 };
-const ImportSingleDesign = ({ emailEditorRef }: ImportSingleDesignProps) => {
+const ImportSingleDesign = ({ pdfEditorRef }: ImportSingleDesignProps) => {
   const translate = useTr();
   const { toggleNotification } = useNotification();
   const hiddenInput = useRef<HTMLInputElement>(null);
@@ -38,9 +38,9 @@ const ImportSingleDesign = ({ emailEditorRef }: ImportSingleDesignProps) => {
   };
 
   const handleLoadSingleDesign = () => {
-    if (emailEditorRef?.current) {
+    if (pdfEditorRef?.current) {
       try {
-        emailEditorRef.current?.editor?.loadDesign(template);
+        pdfEditorRef.current?.editor?.loadDesign(template);
         toggleNotification({
           type: "success",
           title: translate("success"),

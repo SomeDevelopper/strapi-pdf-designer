@@ -9,7 +9,7 @@ import { createdPDF, PDFConfig, PDFTemplate } from "../types";
 export const DATE_FORMAT = "MMM DD, YYYY [at] h:mmA";
 
 /**
- * Fetches all email templates
+ * Fetches all pdf templates
  */
 export const getTemplatesData = async () => {
   const { data } = await axios.get<PDFTemplate[]>(`/${pluginName}/templates`);
@@ -37,39 +37,24 @@ export const getFullEditorConfig = async () => {
 };
 
 /**
- * Get the email template by the ID
+ * Get the pdf template by the ID
  */
 export const getTemplateById = async (id: string) => {
   const { data } = await axios.get<PDFTemplate>(`/${pluginName}/templates/${id}`);
   return data;
 };
 
-/**
- * Get the core email template by the type
- */
-export const getCoreTemplate = async (coreEmailType: string) => {
-  const { data } = await axios.get<PDFTemplate>(`/${pluginName}/core/${coreEmailType}`);
-  return data;
-};
 
 /**
- * Create/Update a custom email template
+ * Create/Update a custom pdf template
  */
-export const createTemplate = async (templateId: string, data: PDFTemplate) => {
+export const createTemplate = async (templateId: string, data: PDFTemplate): Promise<createdPDF> => {
   const { data: response } = await axios.post<createdPDF>(`/${pluginName}/templates/${templateId}`, data);
   return response;
 };
 
 /**
- * Update a core email template
- */
-export const updateCoreTemplate = async (coreEmailType: string, data: PDFTemplate) => {
-  const { data: response } = await axios.post<PDFTemplate>(`/${pluginName}/core/${coreEmailType}`, data);
-  return response;
-};
-
-/**
- * Duplicate a custom email template
+ * Duplicate a custom PDF template
  */
 export const duplicateTemplate = async (id: string) => {
   const { data } = await axios.post<PDFTemplate>(`/${pluginName}/templates/duplicate/${id}`);
@@ -77,7 +62,7 @@ export const duplicateTemplate = async (id: string) => {
 };
 
 /**
- * Delete a custom email template
+ * Delete a custom pdf template
  */
 export const deleteTemplate = async (id: string): Promise<{ success: boolean }> => {
   try {

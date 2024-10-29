@@ -1,6 +1,6 @@
 {
   "name": "strapi-pdf-designer",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Strapi PDF Designer plugin",
   "type": "commonjs",
   "exports": {
@@ -45,7 +45,6 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@strapi/design-system": "^2.0.0-rc.11",
     "@strapi/icons": "^2.0.0-rc.11",
-    "cypress": "^12.17.1",
     "dayjs": "^1.11.9",
     "decode-html": "^2.0.0",
     "html-pdf-node": "^1.0.8",
@@ -69,10 +68,11 @@
     "@strapi/sdk-plugin": "^5.2.7",
     "@strapi/strapi": "^5.1.0",
     "@strapi/typescript-utils": "^5.1.0",
+    "@types/mustache": "^4.2.5",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/react-syntax-highlighter": "^15.5.13",
-    "@types/mustache": "^4.2.5",
+    "cypress": "^13.15.1",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
