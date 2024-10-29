@@ -5,20 +5,20 @@ This plugin is a fork of the Strapi Plugin Email Designer. It is used to create 
 [Strapi-plugin-email-designer](https://www.npmjs.com/package/strapi-plugin-email-designer/v/1.1.2)
 
 ## Requirement :
-You need a node version between 16.x.x and 18.x.x and a Strapi version >= 4.10.0
+You need a node version between 20.x.x and a Strapi version >= 5.0.0
 
 ## Installation
 
 Install the strapi-pdf-designer with node :  
 ```javascript
-npm install strapi-pdf-designer@latest
+npm install strapi-pdf-designer-5@latest
 ```
 
 Make sure to enable it in the plugin file.
 
 ```javascript
 return {
-    'pdf-designer': {
+    'pdf-designer-5': {
       enabled: true,
     },
 }
@@ -32,7 +32,7 @@ Then call your plugin to generate your pdf :
 ```javascript
 try {
    await strapi
-    .plugin('pdfdesigner')
+    .plugin('pdf-designer-5')
     .service('pdf')
     .generatePdf(
       {
@@ -45,7 +45,7 @@ If you want to put some data in your pdf, you can do it by adding in your design
 
 Then you can specify your data in the call plugin : 
 ```javascript
-const pdf = await strapi.plugin('pdf-designer').service('pdf').generatePdf(
+const pdf = await strapi.plugin('pdf-designer-5').service('pdf').generatePdf(
                 { templateReferenceId: 1 },
                 {
                   data: {
