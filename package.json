@@ -1,7 +1,7 @@
 {
-  "name": "strapi-pdf-designer",
+  "name": "strapi-pdf-designer-5",
   "version": "1.0.9",
-  "description": "Strapi PDF Designer plugin",
+  "description": "Strapi PDF Designer plugin working with strapi v5",
   "type": "commonjs",
   "exports": {
     "./package.json": "./package.json",
@@ -24,10 +24,10 @@
     "dist"
   ],
   "strapi": {
-    "name": "pdf-designer",
+    "name": "pdf-designer-5",
     "description": "Description of Pdf Designer plugin",
     "kind": "plugin",
-    "displayName": "Pdf Designer",
+    "displayName": "Pdf Designer 5",
     "required": false
   },
   "scripts": {
