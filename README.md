@@ -5,7 +5,7 @@ This plugin is a fork of the Strapi Plugin Email Designer. It is used to create 
 [Strapi-plugin-email-designer](https://www.npmjs.com/package/strapi-plugin-email-designer/v/1.1.2)
 
 ## Requirement :
-You need a node version between 16.x.x and 18.x.x and a Strapi version >= 4.10.0
+You need a node version between 16.x.x and 18.x.x and a Strapi version >= 5
 
 ## Installation
 
