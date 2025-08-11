@@ -5,3 +5,4 @@ stats.json
 coverage
 node_modules
 cypress.config.js
+dist
