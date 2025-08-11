@@ -2,6 +2,11 @@
   "name": "strapi-pdf-designer",
   "version": "1.0.8",
   "description": "Strapi PDF Designer plugin",
+  "keywords": [
+    "strapi5",
+    "strapi-plugin",
+    "strapi-pdf-designer"
+  ],
   "strapi": {
     "name": "pdf-designer",
     "description": "Description of Pdf Designer plugin",
@@ -13,26 +18,45 @@
     "cypress": "npx cypress open"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.2.1",
-    "@fortawesome/free-solid-svg-icons": "^6.2.1",
-    "@fortawesome/react-fontawesome": "^0.2.0",
-    "cypress": "^12.17.1",
-    "dayjs": "^1.11.9",
+    "@strapi/design-system": "^2.0.0-rc.14",
+    "@strapi/icons": "^2.0.0-rc.14",
+    "dayjs": "^1.11.13",
     "decode-html": "^2.0.0",
-    "html-pdf-node": "^1.0.8",
+    "destr": "^2.0.3",
     "html-to-text": "^9.0.5",
-    "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
-    "prop-types": "^15.8.1",
-    "react-email-editor": "^1.7.8",
-    "react-syntax-highlighter": "^15.5.0",
-    "striptags": "^3.2.0"
+    "mustache": "^4.2.0",
+    "puppeteer": "^24.13.0",
+    "react-email-editor": "^1.7.11",
+    "react-icons": "^5.4.0",
+    "react-intl": "^6.8.9",
+    "react-textarea-autosize": "^8.5.6",
+    "striptags": "^3.2.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
-    "prettier": "^3.0.0"
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
+    "@strapi/sdk-plugin": "^5.2.8",
+    "@strapi/strapi": "^5.6.0",
+    "@strapi/typescript-utils": "^5.6.0",
+    "@types/html-to-text": "^9.0.4",
+    "@types/lodash": "^4.17.13",
+    "@types/mustache": "^4.2.5",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@types/react-email-editor": "^1.5.6",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.28.1",
+    "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "@strapi/strapi": "^4.10.0"
+    "@strapi/sdk-plugin": "^5.2.6",
+    "@strapi/strapi": "^5.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2",
+    "styled-components": "^6.1.13"
   },
   "author": {
     "name": "A Engie developer"
