@@ -1,6 +1,6 @@
 {
   "name": "strapi-pdf-designer",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Strapi PDF Designer plugin",
   "keywords": [
     "strapi5",
