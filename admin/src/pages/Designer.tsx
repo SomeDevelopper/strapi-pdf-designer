@@ -22,7 +22,6 @@ import {
 import { EditorRef, EmailEditor } from "react-email-editor";
 import { useNavigate, useParams } from "react-router-dom";
 import striptags from "striptags";
-import styled from "styled-components";
 import ImportSingleDesign from "../components/ImportSingleDesign";
 import { getUrl, standardEmailRegistrationTemplate } from "../constants";
 import { useTr } from "../hooks/useTr";
@@ -38,6 +37,7 @@ import {
 import { EmailConfig, PdfTemplate } from "../types";
 import { shallowIsEqual } from "../utils/helpers";
 
+/*
 const DesignerContainer = styled.div`
   padding: 18px 30px;
   min-height: 100vh;
@@ -53,7 +53,7 @@ const Header = styled.div`
   height: 60px;
   align-items: center;
   gap: 10px;
-`;
+`;*/
 
 const Designer = ({ isCore = false }: { isCore?: boolean }) => {
   const emailEditorRef = useRef<EditorRef>(null);
@@ -257,154 +257,150 @@ const Designer = ({ isCore = false }: { isCore?: boolean }) => {
   return (
     <Page.Main>
       <Page.Title>{translate("page.design.title")}</Page.Title>
-      <DesignerContainer>
-        <Header>
-          <IconButton
-            style={{ marginTop: "19px", padding: "10px" }}
-            label={translate("goBack")}
-            onClick={() => navigate({ pathname: getUrl() })}
-          >
-            <ArrowLeft />
-          </IconButton>
+      <IconButton
+        style={{ marginTop: "19px", padding: "10px" }}
+        label={translate("goBack")}
+        onClick={() => navigate({ pathname: getUrl() })}
+      >
+        <ArrowLeft />
+      </IconButton>
 
-          {!isCore && (
-            <Box style={{ width: "100%", maxWidth: "150px" }}>
-              <Field.Root required error={errorRefId}>
-                <Field.Label>
-                  {translate("input.label.templateReferenceId")}
-                </Field.Label>
-                <Field.Input
-                  onChange={(e: any) =>
-                    setTemplateData((state) => ({
-                      ...(state || ({} as any)),
-                      templateReferenceId:
-                        e.target.value === ""
-                          ? ""
-                          : isFinite(parseInt(e.target.value))
-                          ? parseInt(e.target.value)
-                          : state?.templateReferenceId ?? "",
-                    }))
-                  }
-                  value={templateData?.templateReferenceId ?? ""}
-                  type="number"
-                  placeholder={translate(
-                    "input.placeholder.templateReferenceId"
-                  )}
-                />
-                <Field.Error />
-              </Field.Root>
-            </Box>
+      {!isCore && (
+        <Box style={{ width: "100%", maxWidth: "150px" }}>
+          <Field.Root required error={errorRefId}>
+            <Field.Label>
+              {translate("input.label.templateReferenceId")}
+            </Field.Label>
+            <Field.Input
+              onChange={(e: any) =>
+                setTemplateData((state) => ({
+                  ...(state || ({} as any)),
+                  templateReferenceId:
+                    e.target.value === ""
+                      ? ""
+                      : isFinite(parseInt(e.target.value))
+                        ? parseInt(e.target.value)
+                        : state?.templateReferenceId ?? "",
+                }))
+              }
+              value={templateData?.templateReferenceId ?? ""}
+              type="number"
+              placeholder={translate(
+                "input.placeholder.templateReferenceId"
+              )}
+            />
+            <Field.Error />
+          </Field.Root>
+        </Box>
+      )}
+      <Box style={{ width: "100%" }}>
+        <Field.Root disabled={isCore} required>
+          <Field.Label>{translate("input.label.templateName")}</Field.Label>
+          <Field.Input
+            disabled={isCore}
+            value={
+              isCore && coreEmailType
+                ? translate(
+                  coreEmailType as
+                  | "user-address-confirmation"
+                  | "reset-password"
+                )
+                : templateData?.name || ""
+            }
+            onChange={(e: any) => {
+              setTemplateData((state) => ({
+                ...state,
+                name: e.target.value,
+              }));
+            }}
+            placeholder={translate("input.placeholder.templateName")}
+          />
+          <Field.Error />
+        </Field.Root>
+      </Box>
+      <Box style={{ width: "100%", maxWidth: "100px" }}>
+        <ImportSingleDesign emailEditorRef={emailEditorRef} />
+      </Box>
+      <Box style={{ width: "100%" }}>
+        <Button
+          onClick={() => downloadTestDesign()}
+          style={{
+            marginTop: "19px",
+            height: "38px",
+            width: "auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "column",
+          }}
+        >
+          {translate("download.test")}
+          {isLoadingTestDesign && (
+            <Loader small style={{ marginLeft: "10px" }} />
           )}
-          <Box style={{ width: "100%" }}>
-            <Field.Root disabled={isCore} required>
-              <Field.Label>{translate("input.label.templateName")}</Field.Label>
-              <Field.Input
-                disabled={isCore}
-                value={
-                  isCore && coreEmailType
-                    ? translate(
-                        coreEmailType as
-                          | "user-address-confirmation"
-                          | "reset-password"
-                      )
-                    : templateData?.name || ""
-                }
-                onChange={(e: any) => {
-                  setTemplateData((state) => ({
-                    ...state,
-                    name: e.target.value,
-                  }));
-                }}
-                placeholder={translate("input.placeholder.templateName")}
-              />
-              <Field.Error />
-            </Field.Root>
-          </Box>
-          <Box style={{ width: "100%", maxWidth: "100px" }}>
-            <ImportSingleDesign emailEditorRef={emailEditorRef} />
-          </Box>
-          <Box style={{ width: "100%" }}>
-            <Button
-              onClick={() => downloadTestDesign()}
+        </Button>
+      </Box>
+      <Box style={{ width: "100%", maxWidth: "100px" }}>
+        <Button
+          onClick={() => saveDesign()}
+          style={{ marginTop: "19px", height: "38px", width: "100%" }}
+        >
+          {translate("save")}
+        </Button>
+      </Box>
+      <Box
+        style={{ flex: 1, display: "flex", height: "calc(100dvh - 80px)" }}
+      >
+        <Tabs.Root
+          value={mode}
+          onValueChange={(selected: "html" | "text") => {
+            setMode(selected);
+            if (selected === "html") {
+              init();
+            }
+          }}
+        >
+          <Tabs.List aria-label="Switch between the html and text design">
+            <Tabs.Trigger value="html">
+              {translate("designer.tab.html")}
+            </Tabs.Trigger>
+            <Tabs.Trigger value="text">
+              {translate("designer.tab.text")}
+            </Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content
+            style={{ height: "calc(100vh - 160px)" }}
+            value="html"
+          >
+            <Box
               style={{
-                marginTop: "19px",
-                height: "38px",
-                width: "auto",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "column",
+                minHeight: "540px",
+                height: "100%",
               }}
             >
-              {translate("download.test")}
-              {isLoadingTestDesign && (
-                <Loader small style={{ marginLeft: "10px" }} />
+              {serverConfigLoaded && (
+                <StrictMode>
+                  <EmailEditor
+                    options={editorOptions}
+                    minHeight="100%"
+                    ref={emailEditorRef}
+                    onLoad={onLoadHandler}
+                  />
+                </StrictMode>
               )}
-            </Button>
-          </Box>
-          <Box style={{ width: "100%", maxWidth: "100px" }}>
-            <Button
-              onClick={() => saveDesign()}
-              style={{ marginTop: "19px", height: "38px", width: "100%" }}
-            >
-              {translate("save")}
-            </Button>
-          </Box>
-        </Header>
-        <Box
-          style={{ flex: 1, display: "flex", height: "calc(100dvh - 80px)" }}
-        >
-          <Tabs.Root
-            value={mode}
-            onValueChange={(selected: "html" | "text") => {
-              setMode(selected);
-              if (selected === "html") {
-                init();
-              }
-            }}
+            </Box>
+          </Tabs.Content>
+          <Tabs.Content
+            style={{ height: "calc(100vh - 160px)", padding: "20px" }}
+            value="text"
           >
-            <Tabs.List aria-label="Switch between the html and text design">
-              <Tabs.Trigger value="html">
-                {translate("designer.tab.html")}
-              </Tabs.Trigger>
-              <Tabs.Trigger value="text">
-                {translate("designer.tab.text")}
-              </Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content
-              style={{ height: "calc(100vh - 160px)" }}
-              value="html"
-            >
-              <Box
-                style={{
-                  minHeight: "540px",
-                  height: "100%",
-                }}
-              >
-                {serverConfigLoaded && (
-                  <StrictMode>
-                    <EmailEditor
-                      options={editorOptions}
-                      minHeight="100%"
-                      ref={emailEditorRef}
-                      onLoad={onLoadHandler}
-                    />
-                  </StrictMode>
-                )}
-              </Box>
-            </Tabs.Content>
-            <Tabs.Content
-              style={{ height: "calc(100vh - 160px)", padding: "20px" }}
-              value="text"
-            >
-              <Textarea
-                onChange={(e: any) => setBodyText(e.target.value)}
-                value={bodyText}
-                style={{ resize: "vertical" }}
-              />
-            </Tabs.Content>
-          </Tabs.Root>
-        </Box>
-      </DesignerContainer>
+            <Textarea
+              onChange={(e: any) => setBodyText(e.target.value)}
+              value={bodyText}
+              style={{ resize: "vertical" }}
+            />
+          </Tabs.Content>
+        </Tabs.Root>
+      </Box>
     </Page.Main>
   );
 };
